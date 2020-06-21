@@ -1,0 +1,6 @@
+# .env config
+.env
+
+# Exclude anything in www/ except .gitkeep
+www/*
+!www/.gitkeep

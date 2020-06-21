@@ -1,0 +1,28 @@
+version: '3.7'
+
+services:
+  www:
+    image: 'node:lts-alpine'
+    container_name: "${CONTAINER_NAME:-static-www}"
+    restart: unless-stopped
+    environment:
+      PORT: "8080"
+    volumes:
+      # Just mount the whole project
+      - "./:/home/node"
+    labels:
+      # Traefik config
+      traefik.enable: "true"
+      traefik.frontend.rule: "Host:${WWW_HOST_NAME}"
+      traefik.port: "8080"
+      traefik.frontend.redirect.entryPoint: https
+    working_dir: /home/node/
+    entrypoint: ./run.sh
+    networks:
+      # Connect to external network used by traefik
+      - traefik
+
+networks:
+  # Named network created for Traefik
+  traefik:
+    external: true
